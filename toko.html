@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#183f35">
+<title>Toko Kita — Operasional Toko</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--forest:#183f35;--forest-2:#245849;--forest-3:#337563;--cream:#f6f4eb;--paper:#fffefa;--ink:#1d2c27;--muted:#65756e;--line:#e4e6dc;--amber:#e8ad35;--amber-pale:#fff2cf;--red:#a83c2e;--red-pale:#fce8e3;--green-pale:#e5f1e9;--shadow:0 12px 32px #2444380c}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;background:var(--cream);color:var(--ink);font:15px/1.5 "Instrument Sans",sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
+.app{min-height:100vh;display:grid;grid-template-columns:244px minmax(0,1fr)}
+.sidebar{position:sticky;top:0;height:100vh;background:var(--forest);color:#eaf2eb;padding:28px 18px 22px;display:flex;flex-direction:column;z-index:5}
+.brand{display:flex;gap:12px;align-items:center;padding:0 8px 26px}
+.brand-mark{width:39px;height:39px;display:grid;place-items:center;background:var(--amber);color:var(--forest);font:700 21px "Bricolage Grotesque",sans-serif;border-radius:12px 12px 12px 4px}
+.brand-name{font:700 21px "Bricolage Grotesque",sans-serif;letter-spacing:-.4px;color:#fff}
+.brand small{display:block;color:#b1c8b9;font-size:12px;letter-spacing:.02em}
+.nav-label{margin:0 10px 9px;color:#a8c0b3;text-transform:uppercase;letter-spacing:.14em;font-size:10px;font-weight:700}
+nav{display:grid;gap:5px}
+nav button{width:100%;display:flex;gap:12px;align-items:center;text-align:left;border:0;border-radius:9px;padding:11px 12px;background:transparent;color:#d5e4d9;font-weight:500;transition:background .16s,color .16s}
+nav button:hover{background:#ffffff12;color:white}
+nav button[aria-current=page]{background:#f1eee1;color:var(--forest);font-weight:700}
+.nav-icon{width:20px;text-align:center;font-size:16px}
+.nav-badge{margin-left:auto;background:var(--amber);color:#3a2b0a;border-radius:20px;min-width:22px;padding:1px 6px;text-align:center;font-size:11px;font-weight:700}
+.side-note{margin-top:auto;border-top:1px solid #ffffff24;padding:16px 9px 0;color:#b7cbbd;font-size:12px}
+.side-note strong{display:block;color:#f1f3eb;font-size:13px;margin-bottom:3px}
+.workspace{min-width:0}
+.topbar{min-height:72px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:20px;padding:12px clamp(18px,4vw,48px);background:#f9f8f2}
+.crumb{font-size:13px;color:var(--muted)}
+.crumb b{color:var(--ink);font-weight:600}
+.top-actions{display:flex;align-items:center;gap:9px}
+.save-state{font-size:12px;color:var(--muted);white-space:nowrap}
+.save-state::before{content:"";display:inline-block;width:7px;height:7px;background:#54a272;border-radius:50%;margin:0 7px 1px 0}
+.save-state.sample::before{background:var(--amber)}
+.save-state.error::before{background:var(--red)}
+.main{width:min(1220px,100%);margin:0 auto;padding:34px clamp(18px,4vw,48px) 52px}
+h1,h2,h3{font-family:"Bricolage Grotesque",Georgia,serif;line-height:1.15;margin:0;color:var(--ink)}
+h1{font-size:clamp(27px,3vw,36px);letter-spacing:-.7px}
+h2{font-size:19px;letter-spacing:-.2px}
+h3{font-size:15px}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:24px}
+.page-head p{margin:7px 0 0;color:var(--muted)}
+.eyebrow{display:block;margin-bottom:8px;color:var(--forest-3);font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+.button{border:1px solid transparent;border-radius:8px;padding:9px 13px;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--forest);color:#fff;font-weight:600;transition:transform .15s,background .15s,border-color .15s}
+.button:hover{background:var(--forest-2);transform:translateY(-1px)}
+.button.secondary{color:var(--forest);background:var(--paper);border-color:var(--line)}
+.button.secondary:hover{border-color:var(--forest-3);background:#fff}
+.button.amber{background:var(--amber);color:#392a0a}
+.button.amber:hover{background:#f0bd55}
+.button.danger{background:var(--red-pale);color:var(--red);border-color:#f1c8c0}
+.button.small{font-size:13px;padding:7px 10px}
+.button:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:18px}
+.stat{position:relative;overflow:hidden;padding:18px 19px;background:var(--paper);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow)}
+.stat::after{content:"";position:absolute;right:-20px;top:-23px;width:74px;height:74px;border:1px solid #e8dfc7;border-radius:50%}
+.stat-label{display:block;color:var(--muted);font-size:12px;font-weight:600;margin-bottom:10px}
+.stat-value{display:block;font:700 clamp(21px,2.4vw,27px)/1.1 "Bricolage Grotesque",sans-serif;letter-spacing:-.5px;white-space:nowrap}
+.stat-foot{display:block;color:var(--muted);font-size:12px;margin-top:8px}
+.stat.featured{background:var(--forest);border-color:var(--forest);color:#fff}
+.stat.featured .stat-label,.stat.featured .stat-foot{color:#c6d9cd}
+.stat.featured::after{border-color:#ffffff20}
+.layout-two{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(280px,.9fr);gap:15px}
+.panel{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:19px 20px;margin-bottom:15px;box-shadow:var(--shadow)}
+.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
+.panel-head p,.note{margin:5px 0 0;color:var(--muted);font-size:13px}
+.chart{display:grid;gap:13px}
+.chart-row{display:grid;grid-template-columns:minmax(72px,105px) minmax(60px,1fr) auto;align-items:center;gap:12px;font-size:13px}
+.chart-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#40534a}
+.track{height:9px;background:#edf0e7;border-radius:8px;overflow:hidden}
+.track span{display:block;height:100%;background:var(--forest-3);border-radius:8px;min-width:3px}
+.chart-value{color:#40534a;font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.product-rank{display:grid;gap:12px}
+.rank-link{flex:none;white-space:nowrap}
+.rank-row{display:grid;grid-template-columns:27px minmax(0,1fr) auto;gap:10px;align-items:center}
+.rank-no{color:#8e9b91;font:600 13px "Bricolage Grotesque",sans-serif}
+.rank-name{font-weight:600;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank-qty{color:var(--muted);font-size:12px;white-space:nowrap}
+.alert-panel{background:#fbf0d7;border-color:#efdfb6}
+.alert-panel .panel-head{margin-bottom:10px}
+.alert-line{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid #e9d8ae;font-size:13px}
+.alert-line strong{font-weight:600}
+.tag{display:inline-flex;align-items:center;white-space:nowrap;border-radius:5px;padding:3px 8px;font-size:11px;font-weight:700}
+.tag.Gold{background:#f8e5aa;color:#67480b}.tag.Silver{background:#e5ebeb;color:#405658}.tag.Reguler{background:#edf0e8;color:#516057}
+.tag.ada{background:var(--green-pale);color:#245e3d}.tag.kosong{background:var(--red-pale);color:#8a3026}
+.tag.low{background:var(--red-pale);color:#91392e}.tag.ok{background:var(--green-pale);color:#245e3d}
+.tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:14px}
+.tools input[type="search"]{flex:1 1 200px}
+input,select{min-height:40px;padding:8px 11px;color:var(--ink);background:#fffefa;border:1px solid #d8ded5;border-radius:7px}
+input::placeholder{color:#87938b}
+input[type="number"]{font-variant-numeric:tabular-nums}
+.check-filter{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:7px 10px;border:1px solid var(--line);border-radius:7px;background:#fffefa;color:#45574d;font-size:13px}
+.check-filter input{min-height:0;accent-color:var(--forest)}
+.table-wrap{overflow-x:auto;overscroll-behavior-x:contain}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:10px 11px;color:#67766d;background:#f7f7f0;border-bottom:1px solid var(--line);font-size:11px;letter-spacing:.035em;text-transform:uppercase;white-space:nowrap}
+td{padding:10px 11px;border-bottom:1px solid #eceee7;vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#f7f8f1}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.link-button{border:0;background:none;color:var(--forest-2);font:inherit;font-weight:700;text-decoration:underline;text-underline-offset:2px;padding:0;text-align:left}
+.link-button:hover{color:#152f28}
+.empty{padding:20px 10px;color:var(--muted);text-align:center}
+.details-row{border-bottom:1px solid var(--line)}
+.details-row summary{padding:12px 2px;color:#30463b;cursor:pointer;list-style-position:inside}
+.details-total{float:right;color:var(--forest);font-weight:700}
+.section-gap{margin-top:17px}
+.shop-signature{position:relative;display:flex;align-items:center;justify-content:space-between;gap:18px;overflow:hidden;padding:18px 22px;margin:-5px 0 17px;border-radius:10px;background:var(--forest);color:#fff}
+.shop-signature::before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:var(--amber)}
+.shop-signature::after{content:"";position:absolute;right:92px;top:-42px;width:152px;height:152px;border:1px dashed #ffffff24;border-radius:50%;pointer-events:none}
+.signature-copy{position:relative;z-index:1}
+.signature-kicker{display:block;color:#e8c879;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px}
+.signature-title{font:600 19px/1.2 "Bricolage Grotesque",sans-serif;letter-spacing:-.2px}
+.signature-detail{display:block;margin-top:4px;color:#c5d8cc;font-size:12px}
+.market-stamp{position:relative;z-index:1;flex:none;width:62px;height:62px;display:grid;place-items:center;border:1px solid #ffffff50;border-radius:50%;color:var(--amber);font:700 19px "Bricolage Grotesque",sans-serif;transform:rotate(-9deg)}
+.market-stamp::after{content:"TOKO LOKAL";position:absolute;bottom:-6px;padding:1px 5px;background:var(--forest);color:#eaf2eb;font:700 8px "Instrument Sans",sans-serif;letter-spacing:.08em;white-space:nowrap}
+.status-line{min-height:20px;color:var(--muted);font-size:12px}
+dialog{width:min(680px,calc(100vw - 28px));max-height:min(88vh,850px);padding:0;border:1px solid var(--line);border-radius:13px;background:var(--paper);color:var(--ink);box-shadow:0 25px 80px #10281e40}
+dialog::backdrop{background:#14271fc2}
+.dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:21px 23px 14px;border-bottom:1px solid var(--line)}
+.dialog-head p{margin:5px 0 0;color:var(--muted);font-size:13px}
+.dialog-body{padding:18px 23px 22px;overflow:auto;max-height:calc(88vh - 95px)}
+.icon-button{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;background:white;color:var(--ink);font-size:20px;line-height:1}
+.field{display:grid;gap:6px;margin-bottom:14px}
+.field label,.field-label{font-size:13px;font-weight:700;color:#35473e}
+.field-hint{font-size:12px;color:var(--muted)}
+.line-items{display:grid;gap:9px}
+.item-line{display:grid;grid-template-columns:minmax(0,1fr) 92px 110px 35px;gap:8px;align-items:center}
+.item-line select,.item-line input{width:100%;min-width:0}
+.item-line .line-price{text-align:right;color:#53645a;font-size:12px}
+.remove-line{width:34px;height:34px;border:1px solid #efcec7;border-radius:7px;background:#fff7f4;color:var(--red);font-weight:700}
+.form-error{min-height:20px;color:var(--red);font-size:13px;margin:6px 0}
+.total-box{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;margin-top:15px;border-radius:8px;background:#f1f3e9}
+.total-box strong{font:700 22px "Bricolage Grotesque",sans-serif;color:var(--forest)}
+.dialog-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
+.toast{position:fixed;z-index:20;right:22px;bottom:22px;max-width:min(420px,calc(100vw - 36px));padding:12px 16px;border-radius:9px;background:var(--forest);color:white;box-shadow:0 12px 30px #10281e35;font-size:14px}
+.toast[hidden]{display:none}
+.mobile-brand{display:none}
+@media(max-width:980px){.app{grid-template-columns:205px minmax(0,1fr)}.sidebar{padding-inline:13px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.layout-two{grid-template-columns:1fr}}
+@media(max-width:700px){.app{display:block}.sidebar{position:sticky;top:0;height:auto;padding:8px 8px 7px}.brand{display:none}.nav-label,.side-note{display:none}nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;overflow:visible}nav button{position:relative;width:100%;min-width:0;min-height:48px;display:flex;flex-direction:column;justify-content:center;gap:1px;padding:4px 2px;font-size:clamp(9px,2.4vw,11px);line-height:1.15;text-align:center;white-space:nowrap}nav button>span:not(.nav-icon):not(.nav-badge){letter-spacing:-.25px}.nav-icon{width:auto;font-size:16px}.nav-badge{top:0;right:calc(50% - 24px);margin:0;min-width:16px;padding:0 4px;font-size:9px}.topbar{min-height:53px;padding:8px 14px;grid-template-columns:minmax(0,1fr) auto;gap:2px 8px}.save-state{display:block;grid-column:1/-1;text-align:right;font-size:10px;line-height:1.25}.main{padding-top:22px}.page-head{align-items:flex-start;flex-direction:column}.page-head .button{align-self:stretch}.layout-two{gap:0}.panel{padding:16px}.chart-row{grid-template-columns:78px minmax(40px,1fr) auto;gap:8px}.shop-signature{padding:15px 17px}.signature-title{font-size:17px}.market-stamp{width:52px;height:52px}.item-line{grid-template-columns:minmax(0,1fr) 74px 30px}.item-line .line-price{display:none}.remove-line{grid-column:3;grid-row:1}.dialog-head{padding:18px 17px 12px}.dialog-body{padding:15px 17px 18px}}
+@media(max-width:420px){.stats{gap:8px}.stat{padding:14px}.stat-value{font-size:20px}.stat-label{font-size:11px}.stat-foot{font-size:11px}.main{padding-inline:13px}.chart-value{font-size:11px}.top-actions .button{padding:7px 9px;font-size:12px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">T</span><span><span class="brand-name">Toko Kita</span><small>Ponorogo · Madiun · Magetan</small></span></div>
+    <p class="nav-label">Ruang kerja</p>
+    <nav id="nav" aria-label="Navigasi utama"></nav>
+    <div class="side-note"><strong>Operasional harian</strong>Ringkas, rapi, siap melayani.</div>
+  </aside>
+  <section class="workspace">
+    <header class="topbar">
+      <div class="crumb">Toko Kita <span aria-hidden="true">/</span> <b id="crumb">Ringkasan</b></div>
+      <div class="top-actions"><button class="button amber small" type="button" onclick="openSaleDialog()">＋ <span>Transaksi baru</span></button></div>
+      <span class="save-state sample" id="saveState" aria-live="polite">Data contoh · perubahan belum disimpan</span>
+    </header>
+    <main class="main" id="main"></main>
+  </section>
+</div>
+<dialog id="dlg" aria-labelledby="detailTitle"></dialog>
+<dialog id="saleDlg" aria-labelledby="saleTitle"></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<script>
+// Data awal disalin dari db_toko.sql; transaksi baru disimpan terpisah di perangkat ini.
+const KAT={1:'Sembako',2:'Minuman',3:'Kebersihan'};
+const CAB=[['Cabang Utara','Ponorogo'],['Cabang Timur','Madiun'],['Cabang Barat','Magetan']];
+const P=[[1,'Andi','Ponorogo'],[2,'Budi','Madiun'],[3,'Citra','Surabaya'],[4,'Dewi','Ponorogo'],[5,'Eko','Magetan'],[6,'Fitri','Madiun'],[7,'Gunawan','Surabaya'],[8,'Hana','Ponorogo'],[9,'Indra','Magetan'],[10,'Joko','Madiun']].map(r=>({id:r[0],nama:r[1],kota:r[2]}));
+const SAMPLE_PR=[[1,'Beras 5 kg',1,65000,100],[2,'Minyak Goreng 2 L',1,38000,100],[3,'Gula 1 kg',1,17000,100],[4,'Kopi Sachet (box)',2,25000,100],[5,'Teh Celup (box)',2,15000,100],[6,'Sabun Mandi',3,12000,100],[7,'Deterjen 1 kg',3,28000,100],[8,'Mie Instan (dus)',1,110000,100]].map(r=>({id:r[0],nama:r[1],kat:r[2],harga:r[3],stok:r[4]}));
+const SAMPLE_T=[[1,'2026-10-01',1,164000],[2,'2026-10-02',2,110000],[3,'2026-10-03',1,139000],[4,'2026-10-04',3,60000],[5,'2026-10-05',4,121000],[6,'2026-10-06',2,60000],[7,'2026-10-07',5,305000],[8,'2026-10-08',1,50000],[9,'2026-10-09',6,108000],[10,'2026-10-10',3,195000],[11,'2026-10-11',7,106000],[12,'2026-10-12',8,175000],[13,'2026-10-13',1,68000],[14,'2026-10-14',4,111000],[15,'2026-10-15',5,28000],[16,'2026-10-16',2,168000],[17,'2026-10-17',6,90000],[18,'2026-10-18',3,330000],[19,'2026-10-19',7,82000],[20,'2026-10-20',1,202000]].map(r=>({id:r[0],tgl:r[1],idp:r[2],total:r[3]}));
+const SAMPLE_D=[[1,1,2,65000],[1,3,2,17000],[2,8,1,110000],[3,2,3,38000],[3,4,1,25000],[4,6,5,12000],[5,1,1,65000],[5,7,2,28000],[6,5,4,15000],[7,8,2,110000],[7,3,5,17000],[8,4,2,25000],[9,7,3,28000],[9,6,2,12000],[10,1,3,65000],[11,2,2,38000],[11,5,2,15000],[12,8,1,110000],[12,1,1,65000],[13,3,4,17000],[14,4,3,25000],[14,6,3,12000],[15,7,1,28000],[16,1,2,65000],[16,2,1,38000],[17,5,6,15000],[18,8,3,110000],[19,6,4,12000],[19,3,2,17000],[20,2,4,38000],[20,4,2,25000]].map(r=>({idt:r[0],idprod:r[1],jml:r[2],harga:r[3]}));
+const STORAGE_KEY='tokokita-dashboard-v1',LOW_STOCK=10;
+const clone=value=>JSON.parse(JSON.stringify(value));
+let PR=clone(SAMPLE_PR),T=clone(SAMPLE_T),D=clone(SAMPLE_D),productLowOnly=false;
+const $=s=>document.querySelector(s),rp=n=>'Rp '+Math.round(n||0).toLocaleString('id-ID'),tgl=s=>new Date(s+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
+const pel=id=>P.find(p=>p.id===Number(id)),prod=id=>PR.find(p=>p.id===Number(id)),sum=a=>a.reduce((x,y)=>x+y,0),kategori=t=>t>=1e6?'Gold':t>=5e5?'Silver':'Reguler';
+function loadSaved(){try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return;const data=JSON.parse(raw);if(!Array.isArray(data.products)||!Array.isArray(data.transactions)||!Array.isArray(data.details))throw Error('Format data tidak sesuai.');PR=data.products;T=data.transactions;D=data.details;$('#saveState').textContent='Data tersimpan di perangkat ini';$('#saveState').classList.remove('sample','error');}catch(error){PR=clone(SAMPLE_PR);T=clone(SAMPLE_T);D=clone(SAMPLE_D);$('#saveState').textContent='Data contoh · perubahan belum disimpan';$('#saveState').classList.add('sample');announce('Data tersimpan tidak dapat dibaca; data contoh ditampilkan.');}}
+function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({products:PR,transactions:T,details:D}));$('#saveState').textContent='Perubahan tersimpan di perangkat ini';$('#saveState').classList.remove('sample','error');return true;}catch(error){$('#saveState').textContent='Penyimpanan gagal';$('#saveState').classList.add('error');announce('Perubahan tidak tersimpan. Periksa ruang penyimpanan browser.');return false;}}
+function announce(message){const toast=$('#toast');toast.textContent=message;toast.hidden=false;clearTimeout(announce.timer);announce.timer=setTimeout(()=>toast.hidden=true,4000);}
+loadSaved();
+function rekapData(){return P.map(p=>{const ts=T.filter(t=>t.idp===p.id),tot=sum(ts.map(t=>t.total));return{...p,n:ts.length,tot,kat:kategori(tot)}})}
+function totals(){const omzet=sum(T.map(t=>t.total));return{omzet,rata:T.length?omzet/T.length:0,rekap:rekapData()}}
+function table(heads,rows,nums=[]){if(!rows.length)return'<p class="empty">Belum ada data untuk ditampilkan.</p>';return`<div class="table-wrap" role="region" aria-label="Tabel, gulir horizontal bila diperlukan" tabindex="0"><table><thead><tr>${heads.map((h,i)=>`<th scope="col" class="${nums.includes(i)?'num':''}">${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td class="${nums.includes(i)?'num':''}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+function detailRows(idt){return D.filter(d=>d.idt===Number(idt)).map(d=>{const product=prod(d.idprod);return[product?product.nama:'Produk dihapus',d.jml,rp(d.harga),rp(d.jml*d.harga)]})}
+const head=(title,desc,eyebrow)=>`<div class="page-head"><div><span class="eyebrow">${eyebrow||'Toko Kita · Operasional'}</span><h1>${title}</h1><p>${desc}</p></div></div>`;
+const NAV=[['ringkasan','▦','Ringkasan'],['pelanggan','♙','Pelanggan'],['produk','▤','Produk'],['transaksi','↗','Transaksi'],['laporan','▥','Laporan']];
+function go(view){if(!V[view])view='ringkasan';$('#crumb').textContent=NAV.find(n=>n[0]===view)[2];$('#main').innerHTML=V[view]();$('#nav').innerHTML=NAV.map(([key,icon,label])=>`<button type="button" data-view="${key}" ${key===view?'aria-current="page"':''}><span class="nav-icon" aria-hidden="true">${icon}</span><span>${label}</span>${key==='produk'&&PR.filter(p=>p.stok<=LOW_STOCK).length?`<span class="nav-badge" aria-label="${PR.filter(p=>p.stok<=LOW_STOCK).length} stok rendah">${PR.filter(p=>p.stok<=LOW_STOCK).length}</span>`:''}</button>`).join('');bindView(view);window.scrollTo(0,0)}
+function navigate(view){productLowOnly=false;if((location.hash.slice(1)||'ringkasan')===view)go(view);else location.hash=view}
+function bindView(view){if(view==='pelanggan'){pelangganTbl();$('#q').oninput=$('#fk').onchange=pelangganTbl}if(view==='produk'){produkTbl();$('#fc').onchange=produkTbl;$('#pq').oninput=produkTbl;$('#lowOnly').onchange=()=>{productLowOnly=$('#lowOnly').checked;produkTbl()}}if(view==='transaksi'){transaksiTbl();$('#fp').onchange=transaksiTbl}}
+const V={
+ringkasan(){const{omzet,rata,rekap}=totals(),kota={};T.forEach(t=>{const p=pel(t.idp);if(p)kota[p.kota]=(kota[p.kota]||0)+t.total});const cities=Object.entries(kota).sort((a,b)=>b[1]-a[1]),maxCity=cities[0]?.[1]||1,rank=PR.map(p=>({...p,q:sum(D.filter(d=>d.idprod===p.id).map(d=>d.jml))})).sort((a,b)=>b.q-a.q),low=PR.filter(p=>p.stok<=LOW_STOCK);return head('Ringkasan penjualan','Kinerja toko dan aktivitas terbaru dalam satu pandangan.','Ikhtisar · Oktober–November 2026')+`
+<section class="shop-signature" aria-label="Identitas toko lokal"><div class="signature-copy"><span class="signature-kicker">Buku dagang · Toko Kita</span><strong class="signature-title">Dekat dengan kebutuhan sekitar.</strong><span class="signature-detail">Ponorogo &nbsp;·&nbsp; Madiun &nbsp;·&nbsp; Magetan</span></div><span class="market-stamp" aria-hidden="true">TK</span></section>
+<section class="stats" aria-label="Ringkasan metrik"><article class="stat featured"><span class="stat-label">Total penjualan</span><strong class="stat-value">${rp(omzet)}</strong><span class="stat-foot">Seluruh transaksi tercatat</span></article><article class="stat"><span class="stat-label">Transaksi</span><strong class="stat-value">${T.length}</strong><span class="stat-foot">Rata-rata ${rp(rata)} per transaksi</span></article><article class="stat"><span class="stat-label">Pelanggan aktif</span><strong class="stat-value">${rekap.filter(r=>r.n).length}<small style="font-size:14px;color:var(--muted);font-weight:500"> / ${P.length}</small></strong><span class="stat-foot">${rekap.filter(r=>!r.n).length} belum pernah belanja</span></article><article class="stat"><span class="stat-label">Stok perlu perhatian</span><strong class="stat-value">${low.length}</strong><span class="stat-foot">Produk dengan stok ≤ ${LOW_STOCK}</span></article></section>
+<div class="layout-two"><section class="panel"><div class="panel-head"><div><h2>Penjualan per kota</h2><p>Nilai transaksi berdasarkan domisili pelanggan.</p></div></div><div class="chart">${cities.map(([city,value])=>`<div class="chart-row"><span class="chart-label">${city}</span><div class="track" aria-label="${Math.round(value/maxCity*100)}%"><span style="width:${value/maxCity*100}%"></span></div><span class="chart-value">${rp(value)}</span></div>`).join('')||'<p class="empty">Transaksi baru akan muncul di sini.</p>'}</div></section><section class="panel"><div class="panel-head"><div><h2>Produk paling laku</h2><p>Jumlah unit yang tercatat terjual.</p></div><button class="link-button rank-link" onclick="navigate('produk')">Semua produk →</button></div><div class="product-rank">${rank.slice(0,5).map((p,i)=>`<div class="rank-row"><span class="rank-no">0${i+1}</span><span class="rank-name">${p.nama}</span><span class="rank-qty">${p.q} unit</span></div>`).join('')}</div></section></div>
+<section class="panel alert-panel section-gap"><div class="panel-head"><div><h2>Perhatian stok</h2><p>${low.length?`${low.length} produk perlu segera diperiksa.`:`Stok contoh dimulai di 100 unit; indikator muncul saat stok ≤ ${LOW_STOCK}.`}</p></div>${low.length?`<button class="button secondary small" onclick="showLowStock()">Lihat stok rendah →</button>`:`<button class="button secondary small" onclick="navigate('produk')">Lihat inventaris →</button>`}</div>${low.length?low.map(p=>`<div class="alert-line"><strong>${p.nama}</strong><span>${p.stok} tersisa</span></div>`).join(''):'<p class="note">Belum ada stok rendah. Catat penjualan untuk memperbarui stok; data contoh tidak diubah.</p>'}</section>
+<section class="panel"><div class="panel-head"><div><h2>Lokasi cabang</h2><p>Jangkauan operasional Toko Kita.</p></div></div>${table(['Cabang','Kota'],CAB)}</section>`},
+pelanggan(){return head('Pelanggan','Kenali pelanggan dan riwayat belanja mereka.','Relasi pelanggan')+`<div class="tools"><input id="q" type="search" placeholder="Cari nama pelanggan…" aria-label="Cari nama pelanggan"><select id="fk" aria-label="Filter berdasarkan kota"><option value="">Semua kota</option>${[...new Set(P.map(p=>p.kota))].map(k=>`<option value="${k}">${k}</option>`).join('')}</select></div><section class="panel" id="tbl" aria-live="polite"></section>`},
+produk(){return head('Produk','Pantau harga, kategori, dan ketersediaan stok.','Katalog & inventaris')+`<div class="tools"><input id="pq" type="search" placeholder="Cari nama produk…" aria-label="Cari nama produk"><select id="fc" aria-label="Filter kategori"><option value="">Semua kategori</option>${Object.entries(KAT).map(([id,name])=>`<option value="${id}">${name}</option>`).join('')}</select><label class="check-filter"><input id="lowOnly" type="checkbox" ${productLowOnly?'checked':''}> Stok rendah saja</label></div><section class="panel" id="tbl" aria-live="polite"></section>`},
+transaksi(){return head('Transaksi','Telusuri transaksi dan buka detail barang yang dibeli.','Aktivitas penjualan')+`<div class="tools"><select id="fp" aria-label="Filter transaksi berdasarkan pelanggan"><option value="">Semua pelanggan</option>${P.map(p=>`<option value="${p.id}">${p.nama}</option>`).join('')}</select><button class="button secondary small" type="button" onclick="exportCSV()">↓ Ekspor CSV</button></div><section class="panel" id="tbl" aria-live="polite"></section>`},
+laporan(){const{rata,rekap}=totals(),maxN=Math.max(0,...rekap.map(r=>r.n)),top5=[...T].sort((a,b)=>b.total-a.total).slice(0,5);return head('Laporan','Analisis penjualan, pelanggan, dan transaksi toko.','Analisis bisnis')+`<section class="panel"><div class="panel-head"><div><h2>Total belanja pelanggan</h2><p>Peringkat belanja diperbarui setiap transaksi baru.</p></div></div>${table(['Pelanggan','Transaksi','Total belanja','Kategori'],[...rekap].sort((a,b)=>b.tot-a.tot).map(r=>[`<button class="link-button" onclick="showP(${r.id})">${r.nama}</button>`,r.n,rp(r.tot),`<span class="tag ${r.kat}">${r.kat}</span>`]),[1,2])}</section><div class="layout-two"><section class="panel"><h2>Belum pernah bertransaksi</h2><p class="note" style="margin-bottom:12px">Pelanggan yang bisa disapa kembali.</p>${table(['Pelanggan','Kota'],rekap.filter(r=>!r.n).map(r=>[r.nama,r.kota]))}</section><section class="panel"><h2>Transaksi terbanyak</h2><p class="note" style="margin-bottom:12px">${maxN} transaksi per pelanggan</p>${table(['Pelanggan','Jumlah transaksi','Total belanja'],rekap.filter(r=>r.n===maxN&&maxN>0).map(r=>[r.nama,r.n,rp(r.tot)]),[1,2])}</section></div><section class="panel"><div class="panel-head"><div><h2>Transaksi di atas rata-rata</h2><p>Rata-rata saat ini: ${rp(rata)}</p></div></div>${table(['No.','Tanggal','Pelanggan','Total'],T.filter(t=>t.total>rata).sort((a,b)=>b.total-a.total).map(t=>[t.id,tgl(t.tgl),pel(t.idp)?.nama||'—',rp(t.total)]),[3])}</section><section class="panel"><div class="panel-head"><div><h2>Lima transaksi terbesar</h2><p>Nilai transaksi tertinggi sepanjang catatan.</p></div></div>${table(['No.','Tanggal','Pelanggan','Total'],top5.map(t=>[t.id,tgl(t.tgl),pel(t.idp)?.nama||'—',rp(t.total)]),[3])}</section><section class="panel"><div class="panel-head"><div><h2>Status pelanggan</h2><p>Pelanggan yang sudah dan belum berbelanja.</p></div></div>${table(['Pelanggan','Status','Total belanja'],[...rekap.filter(r=>r.n).sort((a,b)=>b.tot-a.tot).map(r=>[r.nama,'<span class="tag ada">Sudah bertransaksi</span>',rp(r.tot)]),...rekap.filter(r=>!r.n).map(r=>[r.nama,'<span class="tag kosong">Belum bertransaksi</span>',rp(0)])],[2])}</section><div class="tools"><button class="button secondary" type="button" onclick="exportCSV()">↓ Ekspor seluruh transaksi (CSV)</button><button class="button danger small" type="button" onclick="resetData()">Reset data contoh</button></div>`}
+};
+function pelangganTbl(){const q=$('#q').value.trim().toLowerCase(),k=$('#fk').value,rekap=rekapData(),rows=rekap.filter(r=>r.nama.toLowerCase().includes(q)&&(!k||r.kota===k));$('#tbl').innerHTML=rows.length?table(['ID','Nama','Kota','Transaksi','Total belanja','Kategori'],rows.map(r=>[r.id,`<button type="button" class="link-button" onclick="showP(${r.id})">${r.nama}</button>`,r.kota,r.n,rp(r.tot),`<span class="tag ${r.kat}">${r.kat}</span>`]),[3,4]):'<p class="empty">Tidak ada pelanggan yang cocok. Ubah kata kunci atau pilih semua kota.</p>'}
+function produkTbl(){const c=$('#fc').value,q=$('#pq').value.trim().toLowerCase(),rows=PR.filter(p=>(!c||p.kat===Number(c))&&p.nama.toLowerCase().includes(q)&&(!productLowOnly||p.stok<=LOW_STOCK));$('#tbl').innerHTML=rows.length?table(['ID','Produk','Kategori','Harga','Stok','Status','Terjual'],rows.map(p=>[p.id,p.nama,KAT[p.kat],rp(p.harga),p.stok,`<span class="tag ${p.stok<=LOW_STOCK?'low':'ok'}">${p.stok<=LOW_STOCK?'Stok rendah':'Tersedia'}</span>`,sum(D.filter(d=>d.idprod===p.id).map(d=>d.jml))]),[3,4,6]):'<p class="empty">Produk tidak ditemukan. Coba ubah pencarian atau filter.</p>'}
+function transaksiTbl(){const f=$('#fp').value,rows=[...T].filter(t=>!f||t.idp===Number(f)).sort((a,b)=>b.tgl.localeCompare(a.tgl)||b.id-a.id);$('#tbl').innerHTML=rows.length?rows.map(t=>`<details class="details-row"><summary>#${t.id} · ${tgl(t.tgl)} · ${pel(t.idp)?.nama||'—'} <span class="details-total">${rp(t.total)}</span></summary>${table(['Barang','Jumlah','Harga satuan','Subtotal'],detailRows(t.id),[1,2,3])}</details>`).join(''):'<p class="empty">Belum ada transaksi untuk pelanggan ini.</p>'}
+function showLowStock(){productLowOnly=true;location.hash='produk'}
+function showP(id){const p=pel(id);if(!p)return;const r=rekapData().find(x=>x.id===p.id),rows=T.filter(t=>t.idp===p.id).flatMap(t=>detailRows(t.id).map(row=>[tgl(t.tgl),...row]));$('#dlg').innerHTML=`<div class="dialog-head"><div><span class="eyebrow">Profil pelanggan</span><h2 id="detailTitle">${p.nama}</h2><p>${p.kota} · ${r.n} transaksi · ${rp(r.tot)} <span class="tag ${r.kat}">${r.kat}</span></p></div><button class="icon-button" type="button" aria-label="Tutup detail pelanggan" onclick="$('#dlg').close()">×</button></div><div class="dialog-body">${rows.length?table(['Tanggal','Barang','Jumlah','Harga','Subtotal'],rows,[2,3,4]):'<p class="empty">Pelanggan ini belum memiliki transaksi.</p>'}</div>`;$('#dlg').showModal()}
+const dlg=$('#dlg'),saleDlg=$('#saleDlg');
+function dateToday(){const d=new Date();return[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}
+function openSaleDialog(){$('#saleDlg').innerHTML=`<form id="saleForm"><div class="dialog-head"><div><span class="eyebrow">Penjualan baru</span><h2 id="saleTitle">Catat transaksi</h2><p>Pilih pelanggan dan barang yang dibeli.</p></div><button class="icon-button" type="button" aria-label="Tutup form transaksi" onclick="saleDlg.close()">×</button></div><div class="dialog-body"><div class="field"><label for="customerSelect">Pelanggan</label><select id="customerSelect" required><option value="">Pilih pelanggan</option>${P.map(p=>`<option value="${p.id}">${p.nama} · ${p.kota}</option>`).join('')}</select></div><div class="field"><label for="saleDate">Tanggal transaksi</label><input id="saleDate" type="date" value="${dateToday()}" required></div><div class="field"><span class="field-label">Barang belanja</span><span class="field-hint">Stok yang tersedia ditampilkan di daftar produk.</span><div class="line-items" id="lineItems"></div><button class="button secondary small" type="button" style="justify-self:start;margin-top:10px" onclick="addSaleLine()">＋ Tambah barang</button></div><p class="form-error" id="saleError" role="alert" aria-live="assertive"></p><div class="total-box"><span>Total transaksi</span><strong id="saleTotal">Rp 0</strong></div><div class="dialog-actions"><button class="button secondary" type="button" onclick="saleDlg.close()">Batal</button><button class="button" type="submit">Simpan transaksi</button></div></div></form>`;addSaleLine();saleDlg.showModal();$('#customerSelect').focus();$('#saleForm').onsubmit=submitSale}
+function addSaleLine(){const lines=$('#lineItems');if(!lines)return;const row=document.createElement('div');row.className='item-line';row.innerHTML=`<select class="sale-product" aria-label="Pilih produk" required><option value="">Pilih produk</option>${PR.map(p=>`<option value="${p.id}" ${p.stok<1?'disabled':''}>${p.nama} · stok ${p.stok}</option>`).join('')}</select><input class="sale-qty" type="number" min="1" step="1" value="1" aria-label="Jumlah produk" required><span class="line-price" aria-label="Harga produk">—</span><button class="remove-line" type="button" aria-label="Hapus baris produk" title="Hapus baris" onclick="this.closest('.item-line').remove();updateSaleTotal()">×</button>`;lines.appendChild(row);row.querySelectorAll('select,input').forEach(el=>el.addEventListener('input',updateSaleTotal));updateSaleTotal()}
+function saleLines(){return[...document.querySelectorAll('.item-line')].map(row=>({idprod:Number(row.querySelector('.sale-product').value),jml:Number(row.querySelector('.sale-qty').value)}))}
+function updateSaleTotal(){let total=0;saleLines().forEach(line=>{const p=prod(line.idprod),price=rowPrice(line.idprod);total+=p&&Number.isInteger(line.jml)&&line.jml>0?p.harga*line.jml:0;const row=[...document.querySelectorAll('.item-line')].find(r=>Number(r.querySelector('.sale-product').value)===line.idprod);if(row&&row.querySelector('.line-price'))row.querySelector('.line-price').textContent=p?rp(price):'—'});const out=$('#saleTotal');if(out)out.textContent=rp(total)}
+function rowPrice(id){return prod(id)?.harga||0}
+function submitSale(event){event.preventDefault();const error=$('#saleError');error.textContent='';const customerId=Number($('#customerSelect').value),date=$('#saleDate').value,lines=saleLines();if(!customerId||!pel(customerId)){error.textContent='Pilih pelanggan untuk transaksi ini.';$('#customerSelect').focus();return}if(!date){error.textContent='Tanggal transaksi wajib diisi.';$('#saleDate').focus();return}if(!lines.length||lines.some(l=>!l.idprod||!Number.isInteger(l.jml)||l.jml<1)){error.textContent='Pilih produk dan masukkan jumlah minimal 1 untuk setiap baris.';document.querySelector('.sale-product')?.focus();return}const requested={};lines.forEach(l=>requested[l.idprod]=(requested[l.idprod]||0)+l.jml);const insufficient=Object.entries(requested).find(([id,qty])=>!prod(id)||qty>prod(id).stok);if(insufficient){const p=prod(insufficient[0]);error.textContent=`Stok ${p?.nama||'produk'} tidak cukup. Tersedia ${p?.stok||0}, diminta ${insufficient[1]}.`;document.querySelector(`.sale-product option[value="${insufficient[0]}"]`)?.parentElement.focus();return}const id=Math.max(0,...T.map(t=>t.id))+1,details=lines.map(l=>({idt:id,idprod:l.idprod,jml:l.jml,harga:prod(l.idprod).harga})),total=sum(details.map(d=>d.jml*d.harga)),previousStocks=Object.fromEntries(Object.keys(requested).map(id=>[id,prod(id).stok]));T.push({id,tgl:date,idp:customerId,total});D.push(...details);Object.entries(requested).forEach(([prodId,qty])=>{prod(prodId).stok-=qty});if(!save()){T.pop();D.splice(D.length-details.length,details.length);Object.entries(previousStocks).forEach(([prodId,stock])=>{prod(prodId).stok=stock});error.textContent='Transaksi tidak tersimpan. Periksa penyimpanan browser lalu coba lagi.';return}saleDlg.close();productLowOnly=false;go(location.hash.slice(1)||'ringkasan');announce(`Transaksi #${id} tersimpan. Stok telah diperbarui.`)}
+function exportCSV(){const rows=[['No. transaksi','Tanggal','Pelanggan','Kota','Produk','Jumlah','Harga satuan','Subtotal','Total transaksi']];T.forEach(t=>{const customer=pel(t.idp);const details=D.filter(d=>d.idt===t.id);if(!details.length)rows.push([t.id,t.tgl,customer?.nama||'',customer?.kota||'','','','','',t.total]);details.forEach(d=>rows.push([t.id,t.tgl,customer?.nama||'',customer?.kota||'',prod(d.idprod)?.nama||'',d.jml,d.harga,d.jml*d.harga,t.total]))});const csv='\uFEFF'+rows.map(row=>row.map(value=>`"${String(value??'').replace(/"/g,'""')}"`).join(',')).join('\r\n'),blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`toko-kita-transaksi-${dateToday()}.csv`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);announce('File CSV transaksi berhasil diunduh.')}
+function resetData(){if(!window.confirm('Reset seluruh transaksi dan stok ke data contoh awal? Perubahan tersimpan di perangkat ini akan dihapus.'))return;const previous={PR,T,D};PR=clone(SAMPLE_PR);T=clone(SAMPLE_T);D=clone(SAMPLE_D);if(!save()){PR=previous.PR;T=previous.T;D=previous.D;return}productLowOnly=false;go('ringkasan');announce('Data contoh berhasil dipulihkan.')}
+$('#nav').addEventListener('click',event=>{const button=event.target.closest('button[data-view]');if(button)navigate(button.dataset.view)});
+window.addEventListener('hashchange',()=>go(location.hash.slice(1)||'ringkasan'));
+go(V[location.hash.slice(1)]?location.hash.slice(1):'ringkasan');
+</script>
+</body>
+</html>
